@@ -55,8 +55,24 @@ class Bots {
     }
 }
 
+interface Message {
+    id: number,
+    text: string,
+    time?: number
+}
+
 class Net {
-    sendMessage(chatID) {
+    bots;
+
+    constructor(tokens) {
+        this.bots = new Bots(tokens);
+    }
+
+    sendMessageFromClient(message: Message) {
+
+    }
+
+    sendMessageToClient(message: Message) {
 
     }
 }
