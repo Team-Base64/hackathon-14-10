@@ -212,3 +212,24 @@ func (api *Handler) GetTeacherChats(w http.ResponseWriter, r *http.Request) {
 	}
 	json.NewEncoder(w).Encode(chats)
 }
+
+// // RecieveMessage godoc
+// // @Summary  RecieveMessage
+// // @Description  RecieveMessage
+// // @ID recieveMessage
+// // @Accept  json
+// // @Produce  json
+// // @Success 200 {object} model.TeacherDB
+// // @Failure 401 {object} model.Error "Unauthorized - Access token is missing or invalid"
+// // @Failure 500 {object} model.Error "Internal Server Error - Request is valid but operation failed at server side"
+// // @Router /receive [post]
+// func (api *Handler) RecieveMessage(w http.ResponseWriter, r *http.Request) {
+
+// 	teacher, err := api.usecase.GetTeacher(1)
+// 	if err != nil {
+// 		log.Println("err", err)
+// 		ReturnErrorJSON(w, baseErrors.ErrServerError500, 500)
+// 		return
+// 	}
+// 	json.NewEncoder(w).Encode(teacher)
+// }

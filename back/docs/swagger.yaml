@@ -16,12 +16,10 @@ definitions:
     type: object
   model.CreateMessage:
     properties:
-      attaches:
-        items:
-          type: string
-        type: array
-      studentInviteHash:
-        type: string
+      chatid:
+        type: integer
+      isAuthorTeacher:
+        type: boolean
       text:
         type: string
     type: object

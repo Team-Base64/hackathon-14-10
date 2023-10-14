@@ -318,14 +318,11 @@ const docTemplate = `{
         "model.CreateMessage": {
             "type": "object",
             "properties": {
-                "attaches": {
-                    "type": "array",
-                    "items": {
-                        "type": "string"
-                    }
+                "chatid": {
+                    "type": "integer"
                 },
-                "studentInviteHash": {
-                    "type": "string"
+                "isAuthorTeacher": {
+                    "type": "boolean"
                 },
                 "text": {
                     "type": "string"

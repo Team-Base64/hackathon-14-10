@@ -42,9 +42,9 @@ type ChatDB struct {
 }
 
 type CreateMessage struct {
-	StudentInviteHash string    `json:"studentInviteHash"`
-	Text              string    `json:"text"`
-	Attaches          *[]string `json:"attaches"`
+	ChatID          int    `json:"chatid,omitempty"`
+	Text            string `json:"text"`
+	IsAuthorTeacher bool   `json:"isAuthorTeacher"`
 }
 
 type MessageChat struct {

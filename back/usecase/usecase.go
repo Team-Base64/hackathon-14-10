@@ -47,6 +47,18 @@ func (api *Usecase) AddStudent(params *model.CreateStudentDB) error {
 }
 
 func (api *Usecase) SendMessage(in *model.CreateMessage) error {
+
+	// orderid := int32(in.OrderID)
+	// ans, err := api.mailManager.SendMail(
+	// 	context.Background(),
+	// 	&mail.Mail{Type: in.Type, Username: in.Username, Useremail: in.Useremail, OrderStatus: &in.OrderStatus, Promocode: &in.Promocode, OrderID: &orderid})
+	// if err != nil || !ans.IsSuccessful {
+	// 	return err
+	// }
+	return nil
+}
+
+func (api *Usecase) RecieveMessage(in *model.MessageChat) error {
 	// orderid := int32(in.OrderID)
 	// ans, err := api.mailManager.SendMail(
 	// 	context.Background(),
