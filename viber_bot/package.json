@@ -1,0 +1,22 @@
+{
+  "name": "viber_bot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "tsc && node ./build",
+    "dev": "nodemon index.ts"
+  },
+  "author": "George Illarionov",
+  "license": "ISC",
+  "dependencies": {
+    "@types/node": "^20.8.6",
+    "typescript": "^5.2.2",
+    "viber-bot": "^1.0.18"
+  },
+  "devDependencies": {
+    "http": "^0.0.1-security",
+    "nodemon": "^3.0.1",
+    "ts-node": "^10.9.1"
+  }
+}
