@@ -11,6 +11,7 @@ const publicFolder = path.resolve(__dirname, '..', 'public');
 
 app.use(morgan('dev'));
 app.use(express.static(publicFolder));
+app.use(express.json());
 
 const port = process.env.PORT || 8082;
 
@@ -151,7 +152,9 @@ const net = new Net(tokens, [1, 2]);
 // });
 
 app.post('/recieve', (req, res) => {
-    net.sendMessageFromClient({id: req.body.id, text: req.body.text});
+    console.log(req.body);
+    // console.log(res.json({requestBody: req.body}));
+    net.sendMessageFromClient({id: req.body.id, text: req.body.message});
 });
 
 app.listen(port, () => {
