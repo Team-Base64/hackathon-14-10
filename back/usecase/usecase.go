@@ -1,8 +1,12 @@
 package usecase
 
 import (
+	"bytes"
+	"encoding/json"
+	"log"
 	"main/domain/model"
 	rep "main/repository"
+	"net/http"
 
 	"github.com/google/uuid"
 )
@@ -48,21 +52,23 @@ func (api *Usecase) AddStudent(params *model.CreateStudentDB) error {
 }
 
 func (api *Usecase) SendMessage(in *model.CreateMessage) error {
-
 	//fetch на фронт
 
-	return nil
+	postBody, _ := json.Marshal(in)
+	responseBody := bytes.NewBuffer(postBody)
+	//Leverage Go's HTTP Post function to make request
+	resp, err := http.Post("http://127.0.0.1:8082/post", "application/json", responseBody)
+	//Handle Error
+	if err != nil {
+		log.Println("An Error Occured ")
+	}
+	defer resp.Body.Close()
+	err = api.store.AddMessage(in)
+	return err
 }
 
 func (api *Usecase) RecieveMessage(in *model.CreateMessage) error {
 	err := api.store.AddMessage(in)
-	// orderid := int32(in.OrderID)
-	// ans, err := api.mailManager.SendMail(
-	// 	context.Background(),
-	// 	&mail.Mail{Type: in.Type, Username: in.Username, Useremail: in.Useremail, OrderStatus: &in.OrderStatus, Promocode: &in.Promocode, OrderID: &orderid})
-	// if err != nil || !ans.IsSuccessful {
-	// 	return err
-	// }
 	return err
 }
 
