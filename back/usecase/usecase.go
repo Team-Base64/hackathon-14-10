@@ -9,7 +9,7 @@ import (
 
 type UsecaseInterface interface {
 	CreateTeacher(params *model.TeacherDB) error
-	GetTeacher(id int) (model.TeacherDB, error)
+	GetTeacher(id int) (*model.TeacherDB, error)
 	ChangeTeacher(params *model.TeacherDB) error
 	GetChatsByTeacherID(id int) (model.Chats, error)
 	AddStudent(params *model.CreateStudentDB) error
@@ -32,9 +32,8 @@ func (api *Usecase) CreateTeacher(params *model.TeacherDB) error {
 	return api.store.AddTeacher(params)
 }
 
-func (api *Usecase) GetTeacher(id int) (model.TeacherDB, error) {
-	user, err := api.store.GetTeacher(id)
-	return *user, err
+func (api *Usecase) GetTeacher(id int) (*model.TeacherDB, error) {
+	return api.store.GetTeacher(id)
 }
 
 func (api *Usecase) ChangeTeacher(params *model.TeacherDB) error {

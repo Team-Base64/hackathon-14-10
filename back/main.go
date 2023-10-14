@@ -2,21 +2,17 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"net/http"
 
+	"main/delivery"
 	_ "main/docs"
 	"main/repository"
+	"main/usecase"
 
 	"github.com/gorilla/mux"
+	_ "github.com/jackc/pgx/v4/stdlib"
 	"github.com/jackc/pgx/v5/pgxpool"
-
-	"google.golang.org/grpc"
-	"google.golang.org/grpc/credentials/insecure"
-
-	deliv "main/delivery"
-	usecase "main/usecase"
 
 	conf "main/config"
 
@@ -41,7 +37,7 @@ func loggingAndCORSHeadersMiddleware(next http.Handler) http.Handler {
 
 func main() {
 	myRouter := mux.NewRouter()
-	urlDB := "postgres://" + conf.DBSPuser + ":" + conf.DBPassword + "@" + conf.DBHost + ":" + conf.DBPort + "/" + conf.DBName + "?pool_max_conns=" + fmt.Sprint(maxDBCons)
+	urlDB := "postgres://" + conf.DBSPuser + ":" + conf.DBPassword + "@" + conf.DBHost + ":" + conf.DBPort + "/" + conf.DBName
 	//urlDB := "postgres://" + os.Getenv("TEST_POSTGRES_USER") + ":" + os.Getenv("TEST_POSTGRES_PASSWORD") + "@" + os.Getenv("TEST_DATABASE_HOST") + ":" + os.Getenv("DB_PORT") + "/" + os.Getenv("TEST_POSTGRES_DB")
 	config, _ := pgxpool.ParseConfig(urlDB)
 	config.MaxConns = 70
@@ -54,24 +50,24 @@ func main() {
 	}
 	defer db.Close()
 
-	grcpConnBot, err := grpc.Dial(
-		"127.0.0.1:8081",
-		grpc.WithTransportCredentials(insecure.NewCredentials()),
-	)
-	if err != nil {
-		log.Println("cant connect to grpc bot Leo")
-	} else {
-		log.Println("connected to grpc bot Leo")
-	}
-	defer grcpConnBot.Close()
+	// grcpConnBot, err := grpc.Dial(
+	// 	"127.0.0.1:8081",
+	// 	grpc.WithTransportCredentials(insecure.NewCredentials()),
+	// )
+	// if err != nil {
+	// 	log.Println("cant connect to grpc bot Leo")
+	// } else {
+	// 	log.Println("connected to grpc bot Leo")
+	// }
+	// defer grcpConnBot.Close()
 
-	// botManager = auth.NewAuthCheckerClient(grcpConnAuth)
+	//botManager = auth.NewAuthCheckerClient(grcpConnAuth)
 
 	Store := repository.NewStore(db)
 
 	Usecase := usecase.NewUsecase(Store)
 
-	Handler := deliv.NewHandler(Usecase)
+	Handler := delivery.NewHandler(Usecase)
 
 	myRouter.HandleFunc(conf.PathSignUp, Handler.CreateTeacher).Methods(http.MethodPost, http.MethodOptions)
 	myRouter.HandleFunc(conf.PathProfile, Handler.GetTeacher).Methods(http.MethodGet, http.MethodOptions)

@@ -24,7 +24,7 @@ import (
 // @license.name Apache 2.0
 // @license.url http://www.apache.org/licenses/LICENSE-2.0.html
 
-// @host 127.0.0.1:8080
+// @host localhost:8080
 // @BasePath  /api
 
 type Handler struct {
@@ -65,7 +65,7 @@ func (api *Handler) CreateTeacher(w http.ResponseWriter, r *http.Request) {
 
 	err = api.usecase.CreateTeacher(&req)
 	if err != nil {
-		log.Println("err")
+		log.Println("err", err)
 		ReturnErrorJSON(w, baseErrors.ErrServerError500, 500)
 		return
 	}
@@ -86,8 +86,8 @@ func (api *Handler) GetTeacher(w http.ResponseWriter, r *http.Request) {
 
 	teacher, err := api.usecase.GetTeacher(1)
 	if err != nil {
-		log.Println("err")
-		ReturnErrorJSON(w, baseErrors.ErrUnauthorized401, 401)
+		log.Println("err", err)
+		ReturnErrorJSON(w, baseErrors.ErrServerError500, 500)
 		return
 	}
 	json.NewEncoder(w).Encode(teacher)
@@ -116,7 +116,7 @@ func (api *Handler) ChangeProfile(w http.ResponseWriter, r *http.Request) {
 
 	err = api.usecase.ChangeTeacher(&req)
 	if err != nil {
-		log.Println("err")
+		log.Println("err", err)
 		ReturnErrorJSON(w, baseErrors.ErrServerError500, 500)
 		return
 	}
@@ -146,7 +146,7 @@ func (api *Handler) AddStudent(w http.ResponseWriter, r *http.Request) {
 
 	err = api.usecase.AddStudent(&req)
 	if err != nil {
-		log.Println("err")
+		log.Println("err", err)
 		ReturnErrorJSON(w, baseErrors.ErrServerError500, 500)
 		return
 	}
@@ -176,7 +176,7 @@ func (api *Handler) SendMessage(w http.ResponseWriter, r *http.Request) {
 
 	err = api.usecase.SendMessage(&req)
 	if err != nil {
-		log.Println("err")
+		log.Println("err", err)
 		ReturnErrorJSON(w, baseErrors.ErrServerError500, 500)
 		return
 	}
@@ -206,7 +206,7 @@ func (api *Handler) GetTeacherChats(w http.ResponseWriter, r *http.Request) {
 
 	chats, err := api.usecase.GetChatsByTeacherID(id)
 	if err != nil {
-		log.Println("err")
+		log.Println("err", err)
 		ReturnErrorJSON(w, baseErrors.ErrUnauthorized401, 500)
 		return
 	}

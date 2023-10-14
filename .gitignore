@@ -21,3 +21,4 @@
 go.work
 
 back/commands_for_db.txt
+back/config/DBconf.go
