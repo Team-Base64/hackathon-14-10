@@ -1,0 +1,19 @@
+{
+  "name": "vk_bot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "tsw": "npx tsc -w",
+    "dev": "npx nodemon build"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "nodemon": "^3.0.1",
+    "tsc": "^2.0.4",
+    "typescript": "^5.2.2"
+  }
+}
