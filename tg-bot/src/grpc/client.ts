@@ -12,14 +12,14 @@ const options = {
 
 const packageDefinition = protoLoader.loadSync(PROTO_PATH, options);
 
-const MessageService = grpc.loadPackageDefinition(packageDefinition).BotChat;
+const {MessageService} = grpc.loadPackageDefinition(packageDefinition);
 
 const client = new MessageService(
-    'localhost:8080',
+    '127.0.0.1:50051',
     grpc.credentials.createInsecure(),
 );
 
-client.getMessage({}, (error, message) => {
-    if (!error) throw error;
-    console.log(message);
+client.Send(null, (error, message) => {
+    // if (!error) throw error;
+    console.log(error, message);
 });

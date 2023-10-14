@@ -1,12 +1,6 @@
 const {Telegraf} = require('telegraf');
 const {message} = require('telegraf/filters');
 
-const tokens =
-    [
-        '1064016468:AAEaJJWW0Snm_sZsmQtgoEFbUTYj6pM60hk',
-        '1290980811:AAEgopVWqb7o0I72cwdIGGZRsRyE0GGNkLA',
-    ];
-
 class Bots {
     bots;
     context;
@@ -80,7 +74,7 @@ class Net {
 
     constructor(tokens: Array<string>, chatIDs: Array<number>) {
         this.bots = new Bots(tokens, chatIDs, this.sendMessageToClient);
-        this.bots.launchBots();
+        // this.bots.launchBots();
     }
 
     sendMessageFromClient(message: Message) {
@@ -99,9 +93,10 @@ class Net {
         }
     }
 }
+export default Net;
 
-const net = new Net(tokens, [0, 1]);
-setTimeout(() => net.sendMessageFromClient({id: 0, text: 'testing'}), 10000);
+// const net = new Net(tokens, [0, 1]);
+// setTimeout(() => net.sendMessageFromClient({id: 0, text: 'testing'}), 10000);
 
 // const botsService = new Bots(tokens, [0, 1]);
 // botsService.startBots();

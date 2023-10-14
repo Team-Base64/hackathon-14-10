@@ -15,19 +15,28 @@ const MessageProto = grpc.loadPackageDefinition(packageDefinition);
 
 const server = new grpc.Server();
 const message =
-    {id: '1', text: 'Note 1'};
+    {text: 'Note 1', chatID: '1'};
+
+const Send = (call, callback) => {
+    console.log(call);
+    callback(null, message);
+};
+
+const Recieve = (call, callback) => {
+    console.log(call);
+    callback(null, message);
+};
 
 server.addService(MessageProto.MessageService.service, {
-    getMessage: (_, callback) => {
-        callback(null, message);
-    },
+    Send: Send,
+    Recieve: Recieve,
 });
 
 server.bindAsync(
-    '127.0.0.1:8080',
+    '127.0.0.1:50051',
     grpc.ServerCredentials.createInsecure(),
     (error, port) => {
-        console.log('Server running at http://127.0.0.1:8080');
+        console.log('Server running at http://127.0.0.1:50051');
         server.start();
     },
 );
