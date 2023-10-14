@@ -8,7 +8,8 @@
     "lint:fix": "npx eslint . --ext .ts --fix",
     "start:webpack": "webpack serve",
     "build:webpack": "webpack",
-    "start": "node src/index.ts"
+    "start": "node src/index.ts",
+    "server": "node src/express.ts"
   },
   "keywords": [],
   "author": "",

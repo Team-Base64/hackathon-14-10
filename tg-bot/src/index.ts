@@ -9,10 +9,13 @@ const tokens =
 
 class Bots {
     bots;
+    context;
 
     constructor(tokens) {
         this.bots = [];
+        this.context = new Map<string, object>();
         this.createBots(tokens);
+        this.initBots();
     }
 
     createBots(tokens) {
@@ -22,29 +25,41 @@ class Bots {
     }
 
     initBots() {
-        this.bots.forEach((bot) => {
-            bot.start((ctx) => ctx.reply('Welcome'));
-            bot.help((ctx) => ctx.reply('Send me a sticker'));
-            bot.hears('hi', (ctx) => ctx.reply('Hey there'));
+        this.bots.forEach((bot, userID) => {
+            bot.start((ctx) => {
+                // this.ctx.push()
+                ctx.reply('Run /addClass command');
+                this.context.set(userID.toString(), ctx);
+                // console.log(ctx.botInfo);
+                // console.log(ctx.update); // update info
+                // console.log(ctx.state); // empty -_-
+            });
+            bot.help((ctx) => ctx.reply('Run /addClass command to send me a token from your teacher!'));
+            bot.command('addClass', Telegraf.reply('token'));
+            bot.hears('hi', this.sendMessage);
+        });
+    }
+
+    startBots() {
+        this.bots.forEach((bot, userID) => {
             bot.launch();
 
             process.once('SIGINT', () => bot.stop('SIGINT'));
             process.once('SIGTERM', () => bot.stop('SIGTERM'));
         });
     }
+
+    sendMessage(ctx) {
+        console.log(ctx);
+        ctx.reply('File content at: ' + new Date() + ' is: lol\n');
+    }
 }
 
-const botsSeervice = new Bots(tokens);
+class Net {
+    sendMessage(chatID) {
 
-botsSeervice.initBots();
+    }
+}
 
-// const bot = new Telegraf(tokens[0]);
-// bot.start((ctx) => ctx.reply('Welcome'));
-// bot.help((ctx) => ctx.reply('Send me a sticker'));
-// bot.on(message('sticker'), (ctx) => ctx.reply('👍'));
-// bot.hears('hi', (ctx) => ctx.reply('Hey there'));
-// bot.launch();
-//
-// // Enable graceful stop
-// process.once('SIGINT', () => bot.stop('SIGINT'));
-// process.once('SIGTERM', () => bot.stop('SIGTERM'));
+const botsService = new Bots(tokens);
+botsService.startBots();

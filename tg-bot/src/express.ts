@@ -9,7 +9,7 @@ const publicFolder = path.resolve(__dirname, '..', 'public');
 app.use(morgan('dev'));
 app.use(express.static(publicFolder));
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 8000;
 
 app.all('/*', (req, res) => {
     res.sendFile(path.resolve(`${publicFolder}/index.html`));
