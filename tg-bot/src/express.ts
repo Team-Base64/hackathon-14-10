@@ -113,7 +113,7 @@ class Bots {
 }
 
 interface Message {
-    id: number,
+    chatid: number,
     text: string,
     time?: number
 }
@@ -127,15 +127,15 @@ class Net {
     }
 
     sendMessageFromClient(message: Message) {
-        if (this.bots.context.has(message.id)) {
-            this.bots.sendMessage(this.bots.context.get(message.id), message.text);
+        if (this.bots.context.has(message.chatid)) {
+            this.bots.sendMessage(this.bots.context.get(message.chatid), message.text);
         } else {
             console.error('sendMessageFromClient error, no such chat id');
         }
     }
 
     sendMessageToClient(message: Message) {
-        if (message.id !== undefined) {
+        if (message.chatid !== undefined) {
             console.log('sendMessageToClient, text:', message.text);
             fetch(basePath+'/recieve', {body: JSON.stringify(message)});
         } else {
@@ -154,7 +154,7 @@ const net = new Net(tokens, [1, 2]);
 app.post('/recieve', (req, res) => {
     console.log(req.body);
     // console.log(res.json({requestBody: req.body}));
-    net.sendMessageFromClient({id: req.body.id, text: req.body.message});
+    net.sendMessageFromClient({chatid: req.body.chatid, text: req.body.message});
 });
 
 app.listen(port, () => {
