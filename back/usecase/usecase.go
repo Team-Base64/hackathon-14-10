@@ -14,6 +14,7 @@ type UsecaseInterface interface {
 	GetChatsByTeacherID(id int) (model.Chats, error)
 	AddStudent(params *model.CreateStudentDB) error
 	SendMessage(in *model.CreateMessage) error
+	RecieveMessage(in *model.CreateMessage) error
 }
 
 type Usecase struct {
@@ -48,17 +49,13 @@ func (api *Usecase) AddStudent(params *model.CreateStudentDB) error {
 
 func (api *Usecase) SendMessage(in *model.CreateMessage) error {
 
-	// orderid := int32(in.OrderID)
-	// ans, err := api.mailManager.SendMail(
-	// 	context.Background(),
-	// 	&mail.Mail{Type: in.Type, Username: in.Username, Useremail: in.Useremail, OrderStatus: &in.OrderStatus, Promocode: &in.Promocode, OrderID: &orderid})
-	// if err != nil || !ans.IsSuccessful {
-	// 	return err
-	// }
+	//fetch на фронт
+
 	return nil
 }
 
-func (api *Usecase) RecieveMessage(in *model.MessageChat) error {
+func (api *Usecase) RecieveMessage(in *model.CreateMessage) error {
+	err := api.store.AddMessage(in)
 	// orderid := int32(in.OrderID)
 	// ans, err := api.mailManager.SendMail(
 	// 	context.Background(),
@@ -66,7 +63,7 @@ func (api *Usecase) RecieveMessage(in *model.MessageChat) error {
 	// if err != nil || !ans.IsSuccessful {
 	// 	return err
 	// }
-	return nil
+	return err
 }
 
 func (api *Usecase) GetChatsByTeacherID(id int) (model.Chats, error) {

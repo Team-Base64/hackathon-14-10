@@ -233,3 +233,33 @@ func (api *Handler) GetTeacherChats(w http.ResponseWriter, r *http.Request) {
 // 	}
 // 	json.NewEncoder(w).Encode(teacher)
 // }
+
+// RecieveMessage godoc
+// @Summary Recieve Message
+// @Description Recieve Message
+// @ID recieveMessage
+// @Accept  json
+// @Produce  json
+// @Param user body model.CreateMessage true "Message"
+// @Success 200 {object} model.Response "OK"
+// @Failure 400 {object} model.Error "Bad request - Problem with the request"
+// @Failure 401 {object} model.Error "Unauthorized - Access token is missing or invalid"
+// @Failure 500 {object} model.Error "Internal Server Error - Request is valid but operation failed at server side"
+// @Router /recieve [post]
+func (api *Handler) ReceiveMessage(w http.ResponseWriter, r *http.Request) {
+	decoder := json.NewDecoder(r.Body)
+	var req model.CreateMessage
+	err := decoder.Decode(&req)
+	if err != nil {
+		ReturnErrorJSON(w, baseErrors.ErrBadRequest400, 400)
+		return
+	}
+
+	err = api.usecase.RecieveMessage(&req)
+	if err != nil {
+		log.Println("err", err)
+		ReturnErrorJSON(w, baseErrors.ErrServerError500, 500)
+		return
+	}
+	json.NewEncoder(w).Encode(&model.Response{})
+}
