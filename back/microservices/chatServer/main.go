@@ -5,6 +5,7 @@ import (
 	"log"
 	"net"
 	"sync"
+	"time"
 
 	chat "main/microservices/chatServer/gen_files"
 
@@ -35,7 +36,7 @@ func main() {
 	defer db.Close()
 
 	server := grpc.NewServer()
-	chat.RegisterBotChatServer(server, NewChatManager())
+	chat.RegisterBotChatServer(server, NewChatManager(db))
 
 	log.Println("starting server at :8081")
 	server.Serve(lis)
@@ -45,56 +46,24 @@ const sessKeyLen = 10
 
 type ChatManager struct {
 	chat.UnimplementedBotChatServer
-
+	db *pgxpool.Pool
 	mu sync.RWMutex
 }
 
-func NewChatManager() *ChatManager {
+func NewChatManager(db *pgxpool.Pool) *ChatManager {
 	return &ChatManager{
 		mu: sync.RWMutex{},
+		db: db,
 	}
 }
 
-func (sm *ChatManager) Send(ctx context.Context, in *chat.Message) (*chat.Status, error) {
-	log.Println("call Send ", in)
-	// newUUID := uuid.New()
-	// id := &session.SessionID{
-	// 	ID: newUUID.String(),
-	// }
-	// sm.mu.Lock()
-	// sm.sessions[id.ID] = in
-	// sm.mu.Unlock()
-
-	return &chat.Status{IsSuccessful: true}, nil
-}
-
-func (sm *ChatManager) Receive(ctx context.Context, in *chat.Message) (*chat.Status, error) {
+func (sm *ChatManager) Recieve(ctx context.Context, in *chat.Message) (*chat.Status, error) {
 	log.Println("call Receive ", in)
-	// newUUID := uuid.New()
-	// id := &session.SessionID{
-	// 	ID: newUUID.String(),
-	// }
-	// sm.mu.Lock()
-	// sm.sessions[id.ID] = in
-	// sm.mu.Unlock()
+	_, err := sm.db.Query(context.Background(), `INSERT INTO messages (chatID, text, isAuthorTeacher, time) VALUES ($1, $2, $3, $4);`, in.ChatID, in.Text, false, time.Now().Format("2006.01.02 15:04:05"))
+	if err != nil {
+		log.Println(err)
+		return &chat.Status{IsSuccessful: false}, nil
+	}
 
 	return &chat.Status{IsSuccessful: true}, nil
 }
-
-// func (sm *SessionManager) Check(ctx context.Context, in *session.SessionID) (*session.Session, error) {
-// 	log.Println("call Check", in)
-// 	sm.mu.RLock()
-// 	defer sm.mu.RUnlock()
-// 	if sess, ok := sm.sessions[in.ID]; ok {
-// 		return sess, nil
-// 	}
-// 	return nil, grpc.Errorf(codes.NotFound, "session not found")
-// }
-
-// func (sm *SessionManager) Delete(ctx context.Context, in *session.SessionID) (*session.Nothing, error) {
-// 	log.Println("call Delete", in)
-// 	sm.mu.Lock()
-// 	defer sm.mu.Unlock()
-// 	delete(sm.sessions, in.ID)
-// 	return &session.Nothing{IsSuccessful: true}, nil
-// }

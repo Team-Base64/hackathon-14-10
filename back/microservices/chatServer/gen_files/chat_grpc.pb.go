@@ -23,7 +23,6 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	BotChat_Send_FullMethodName    = "/chat.BotChat/Send"
 	BotChat_Recieve_FullMethodName = "/chat.BotChat/Recieve"
 )
 
@@ -32,7 +31,7 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type BotChatClient interface {
 	// From server to bot
-	Send(ctx context.Context, in *Message, opts ...grpc.CallOption) (*Status, error)
+	// rpc Send (Message) returns (Status) {}
 	// From api to bot
 	Recieve(ctx context.Context, in *Message, opts ...grpc.CallOption) (*Status, error)
 }
@@ -43,15 +42,6 @@ type botChatClient struct {
 
 func NewBotChatClient(cc grpc.ClientConnInterface) BotChatClient {
 	return &botChatClient{cc}
-}
-
-func (c *botChatClient) Send(ctx context.Context, in *Message, opts ...grpc.CallOption) (*Status, error) {
-	out := new(Status)
-	err := c.cc.Invoke(ctx, BotChat_Send_FullMethodName, in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
 }
 
 func (c *botChatClient) Recieve(ctx context.Context, in *Message, opts ...grpc.CallOption) (*Status, error) {
@@ -68,7 +58,7 @@ func (c *botChatClient) Recieve(ctx context.Context, in *Message, opts ...grpc.C
 // for forward compatibility
 type BotChatServer interface {
 	// From server to bot
-	Send(context.Context, *Message) (*Status, error)
+	// rpc Send (Message) returns (Status) {}
 	// From api to bot
 	Recieve(context.Context, *Message) (*Status, error)
 	mustEmbedUnimplementedBotChatServer()
@@ -78,9 +68,6 @@ type BotChatServer interface {
 type UnimplementedBotChatServer struct {
 }
 
-func (UnimplementedBotChatServer) Send(context.Context, *Message) (*Status, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Send not implemented")
-}
 func (UnimplementedBotChatServer) Recieve(context.Context, *Message) (*Status, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Recieve not implemented")
 }
@@ -95,24 +82,6 @@ type UnsafeBotChatServer interface {
 
 func RegisterBotChatServer(s grpc.ServiceRegistrar, srv BotChatServer) {
 	s.RegisterService(&BotChat_ServiceDesc, srv)
-}
-
-func _BotChat_Send_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Message)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(BotChatServer).Send(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: BotChat_Send_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(BotChatServer).Send(ctx, req.(*Message))
-	}
-	return interceptor(ctx, in, info, handler)
 }
 
 func _BotChat_Recieve_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -140,10 +109,6 @@ var BotChat_ServiceDesc = grpc.ServiceDesc{
 	ServiceName: "chat.BotChat",
 	HandlerType: (*BotChatServer)(nil),
 	Methods: []grpc.MethodDesc{
-		{
-			MethodName: "Send",
-			Handler:    _BotChat_Send_Handler,
-		},
 		{
 			MethodName: "Recieve",
 			Handler:    _BotChat_Recieve_Handler,

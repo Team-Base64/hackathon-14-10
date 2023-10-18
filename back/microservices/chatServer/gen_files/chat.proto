@@ -18,7 +18,7 @@ bool isSuccessful = 1;
 
 service BotChat {
 // From server to bot
-rpc Send (Message) returns (Status) {}
+//rpc Send (Message) returns (Status) {}
 // From api to bot
 rpc Recieve (Message) returns (Status) {}
 }

@@ -51,30 +51,18 @@ func (api *Usecase) AddStudent(params *model.CreateStudentDB) error {
 }
 
 func (api *Usecase) SendMessage(in *model.CreateMessage) error {
-	//fetch на фронт
-
-	// postBody, _ := json.Marshal(in)
-	// responseBody := bytes.NewBuffer(postBody)
-	// //Leverage Go's HTTP Post function to make request
-	// resp, err := http.Post("http://127.0.0.1:8082/post", "application/json", responseBody)
-	// //Handle Error
-	// if err != nil {
-	// 	log.Println("An Error Occured ")
-	// }
-	// defer resp.Body.Close()
-	//ctx, _ := context.WithTimeout(context.Background(), time.Second)
 	_, err := api.chatManager.Recieve(
 		context.Background(),
 		&chat.Message{
 			Text:   in.Text,
 			ChatID: int32(in.ChatID),
 		})
-	// ctx, _ := context.WithTimeout(context.Background(), time.Second)
+	if err != nil {
+		return err
+	}
 
-	// st, err := api.chatManager.Send(ctx, &chat.Message{Text: "s", ChatID: 1})
-	// log.Println(st)
+	err = api.store.AddMessage(&model.CreateMessage{Text: in.Text, ChatID: in.ChatID, IsAuthorTeacher: true})
 	return err
-	//err = api.store.AddMessage(in)
 }
 
 func (api *Usecase) RecieveMessage(in *model.CreateMessage) error {
