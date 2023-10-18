@@ -1,3 +1,4 @@
+import client from './client';
 const {Telegraf} = require('telegraf');
 
 
@@ -41,7 +42,7 @@ class Bots {
                 this.sendMessage(ctx, ctx.message.text);
                 this.sendMessageToClient(
                     {
-                        id: this.senderChat.get(ctx.update.message.chat.id), text: ctx.message.text,
+                        chatID: this.senderChat.get(ctx.update.message.chat.id), text: ctx.message.text,
                     },
                 );
             });
@@ -88,16 +89,11 @@ export default class Net {
     sendMessageToClient(message: Message) {
         if (message.chatID !== undefined) {
             console.log('sendMessageToClient, text:', message.text);
+            client.Send(message, (error, message) => {
+                console.log(error, message);
+            });
         } else {
             console.error('sendMessageToClient error, no such chat id');
         }
     }
 }
-
-//export default Net;
-
-// const net = new Net(tokens, [0, 1]);
-// setTimeout(() => net.sendMessageFromClient({id: 0, text: 'testing'}), 10000);
-
-// const botsService = new Bots(tokens, [0, 1]);
-// botsService.startBots();
