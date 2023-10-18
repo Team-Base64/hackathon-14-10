@@ -18,5 +18,9 @@ const client = new BotChat(
     grpc.credentials.createInsecure(),
 );
 
+client.Send({chatID: 1, message: ''}, (error, message) => {
+    console.log(error, message);
+});
+
 export default client;
 

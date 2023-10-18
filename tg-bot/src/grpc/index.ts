@@ -89,9 +89,6 @@ export default class Net {
     sendMessageToClient(message: Message) {
         if (message.chatID !== undefined) {
             console.log('sendMessageToClient, text:', message.text);
-            client.Send(message, (error, message) => {
-                console.log(error, message);
-            });
         } else {
             console.error('sendMessageToClient error, no such chat id');
         }
