@@ -11,16 +11,43 @@ const options = {
 };
 
 const packageDefinition = protoLoader.loadSync(PROTO_PATH, options);
-const {BotChat} = grpc.loadPackageDefinition(packageDefinition).chat;
+const MessageProto = grpc.loadPackageDefinition(packageDefinition).chat;
 
-const client = new BotChat(
-    '127.0.0.1:50051',
-    grpc.credentials.createInsecure(),
-);
+// const client = new MessageProto.BotChat(
+//     '127.0.0.1:8081',
+//     grpc.credentials.createInsecure(),
+// );
 
-client.Send({chatID: 1, message: ''}, (error, message) => {
-    console.log(error, message);
-});
+// // const Send = (call, callback) => {
+// //     console.log(new Date(), call.request);
+// //     net.sendMessageFromClient(call.request);
+// //     callback(null, {isSuccessful: true});
+// // };
 
-export default client;
+// //client.addService(MessageProto.BotChat.client, {Send: Send});
+// const Mes = {chatID: 1, text: ''};
+// client.Send({Mes}, (error, message) => {
+//     console.log(error, message);
+// });
 
+// export default client;
+
+//function main() {
+   
+    const client = new MessageProto.BotChat(
+        '127.0.0.1:8081',
+        grpc.credentials.createInsecure(),
+    );
+    //console.log(grpc.status);
+
+    // const Mes = {chatID: 1, text: '123'};
+    // // client.Recieve(Mes, function(err, response) {
+    // //   console.log('Greeting:', response, Mes);
+    // // });
+    // client.Recieve(Mes, function(creationFailed, productCreated){
+    //     console.log("On Success:",productCreated);
+    //     console.log("On Failure:",creationFailed);
+    // });  
+ // }
+   export default client;
+ // main();

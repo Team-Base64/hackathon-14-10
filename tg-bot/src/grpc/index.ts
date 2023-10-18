@@ -89,6 +89,11 @@ export default class Net {
     sendMessageToClient(message: Message) {
         if (message.chatID !== undefined) {
             console.log('sendMessageToClient, text:', message.text);
+            //const Mes = {chatID: messa, text: message.text};
+            client.Recieve(message, function(creationFailed, productCreated){
+                console.log("On Success:",productCreated);
+                console.log("On Failure:",creationFailed);
+            });  
         } else {
             console.error('sendMessageToClient error, no such chat id');
         }
