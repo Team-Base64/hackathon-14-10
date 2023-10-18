@@ -6,7 +6,7 @@
     "target": "es2016",
     /* Set the JavaScript language version for emitted JavaScript and include compatible library declarations. */
     /* Modules */
-    "module": "ES6",
+    "module": "CommonJS",
     /* Specify what module code is generated. */
     "rootDir": "./public",
     /* Specify the root folder within your source files. */

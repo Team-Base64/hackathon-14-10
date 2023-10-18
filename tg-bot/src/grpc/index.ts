@@ -1,5 +1,5 @@
 const {Telegraf} = require('telegraf');
-const {message} = require('telegraf/filters');
+
 
 class Bots {
     bots;
@@ -64,36 +64,37 @@ class Bots {
 }
 
 interface Message {
-    id: number,
+    chatID: number,
     text: string,
     time?: number
 }
 
-class Net {
+export default class Net {
     bots;
 
     constructor(tokens: Array<string>, chatIDs: Array<number>) {
         this.bots = new Bots(tokens, chatIDs, this.sendMessageToClient);
-        // this.bots.launchBots();
+        this.bots.launchBots();
     }
 
     sendMessageFromClient(message: Message) {
-        if (this.bots.context.has(message.id)) {
-            this.bots.sendMessage(this.bots.context.get(message.id), message.text);
+        if (this.bots.context.has(message.chatID)) {
+            this.bots.sendMessage(this.bots.context.get(message.chatID), message.text);
         } else {
             console.error('sendMessageFromClient error, no such chat id');
         }
     }
 
     sendMessageToClient(message: Message) {
-        if (message.id !== undefined) {
+        if (message.chatID !== undefined) {
             console.log('sendMessageToClient, text:', message.text);
         } else {
             console.error('sendMessageToClient error, no such chat id');
         }
     }
 }
-export default Net;
+
+//export default Net;
 
 // const net = new Net(tokens, [0, 1]);
 // setTimeout(() => net.sendMessageFromClient({id: 0, text: 'testing'}), 10000);

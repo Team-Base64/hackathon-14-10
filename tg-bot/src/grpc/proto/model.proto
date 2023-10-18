@@ -20,5 +20,5 @@ service BotChat {
 // From server to bot
 rpc Send (Message) returns (Status) {}
 // From api to bot
-rpc Receive (Message) returns (Status) {}
+rpc Recieve (Message) returns (Status) {}
 }
