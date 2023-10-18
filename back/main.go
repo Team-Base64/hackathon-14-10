@@ -13,8 +13,11 @@ import (
 	"github.com/gorilla/mux"
 	_ "github.com/jackc/pgx/v4/stdlib"
 	"github.com/jackc/pgx/v5/pgxpool"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
 
 	conf "main/config"
+	chat "main/microservices/chatServer/gen_files"
 
 	httpSwagger "github.com/swaggo/http-swagger"
 	//bot "main/microservices/auth/gen_files"
@@ -24,16 +27,16 @@ func loggingAndCORSHeadersMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		log.Println(r.RequestURI, r.Method)
 
-		for header := range conf.Headers {
-			w.Header().Set(header, conf.Headers[header])
-		}
+		// for header := range conf.Headers {
+		// 	w.Header().Set(header, conf.Headers[header])
+		// }
 		next.ServeHTTP(w, r)
 	})
 }
 
-// var (
-// 	botManager bot.BotServiceClient
-// )
+var (
+	chatManager chat.BotChatClient
+)
 
 func main() {
 	myRouter := mux.NewRouter()
@@ -50,22 +53,22 @@ func main() {
 	}
 	defer db.Close()
 
-	// grcpConnBot, err := grpc.Dial(
-	// 	"127.0.0.1:8081",
-	// 	grpc.WithTransportCredentials(insecure.NewCredentials()),
-	// )
-	// if err != nil {
-	// 	log.Println("cant connect to grpc bot Leo")
-	// } else {
-	// 	log.Println("connected to grpc bot Leo")
-	// }
-	// defer grcpConnBot.Close()
+	grcpConnChat, err := grpc.Dial(
+		"127.0.0.1:50051",
+		grpc.WithTransportCredentials(insecure.NewCredentials()),
+	)
+	if err != nil {
+		log.Println("cant connect to grpc chatServer")
+	} else {
+		log.Println("connected to grpc chatServer")
+	}
+	defer grcpConnChat.Close()
 
-	//botManager = auth.NewAuthCheckerClient(grcpConnAuth)
+	chatManager = chat.NewBotChatClient(grcpConnChat)
 
 	Store := repository.NewStore(db)
 
-	Usecase := usecase.NewUsecase(Store)
+	Usecase := usecase.NewUsecase(Store, chatManager)
 
 	Handler := delivery.NewHandler(Usecase)
 

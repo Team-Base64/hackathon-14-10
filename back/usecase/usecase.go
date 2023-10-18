@@ -1,12 +1,11 @@
 package usecase
 
 import (
-	"bytes"
-	"encoding/json"
-	"log"
+	"context"
 	"main/domain/model"
 	rep "main/repository"
-	"net/http"
+
+	chat "main/microservices/chatServer/gen_files"
 
 	"github.com/google/uuid"
 )
@@ -22,14 +21,14 @@ type UsecaseInterface interface {
 }
 
 type Usecase struct {
-	//botManager mail.MailServiceClient
-	store rep.StoreInterface
+	chatManager chat.BotChatClient
+	store       rep.StoreInterface
 }
 
-func NewUsecase(us rep.StoreInterface) UsecaseInterface {
+func NewUsecase(us rep.StoreInterface, cm chat.BotChatClient) UsecaseInterface {
 	return &Usecase{
-		//botManager: mailManager,
-		store: us,
+		chatManager: cm,
+		store:       us,
 	}
 }
 
@@ -54,17 +53,28 @@ func (api *Usecase) AddStudent(params *model.CreateStudentDB) error {
 func (api *Usecase) SendMessage(in *model.CreateMessage) error {
 	//fetch на фронт
 
-	postBody, _ := json.Marshal(in)
-	responseBody := bytes.NewBuffer(postBody)
-	//Leverage Go's HTTP Post function to make request
-	resp, err := http.Post("http://127.0.0.1:8082/post", "application/json", responseBody)
-	//Handle Error
-	if err != nil {
-		log.Println("An Error Occured ")
-	}
-	defer resp.Body.Close()
-	err = api.store.AddMessage(in)
+	// postBody, _ := json.Marshal(in)
+	// responseBody := bytes.NewBuffer(postBody)
+	// //Leverage Go's HTTP Post function to make request
+	// resp, err := http.Post("http://127.0.0.1:8082/post", "application/json", responseBody)
+	// //Handle Error
+	// if err != nil {
+	// 	log.Println("An Error Occured ")
+	// }
+	// defer resp.Body.Close()
+	//ctx, _ := context.WithTimeout(context.Background(), time.Second)
+	_, err := api.chatManager.Recieve(
+		context.Background(),
+		&chat.Message{
+			Text:   in.Text,
+			ChatID: int32(in.ChatID),
+		})
+	// ctx, _ := context.WithTimeout(context.Background(), time.Second)
+
+	// st, err := api.chatManager.Send(ctx, &chat.Message{Text: "s", ChatID: 1})
+	// log.Println(st)
 	return err
+	//err = api.store.AddMessage(in)
 }
 
 func (api *Usecase) RecieveMessage(in *model.CreateMessage) error {
