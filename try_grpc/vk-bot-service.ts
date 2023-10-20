@@ -16,7 +16,7 @@ const rl = readline.createInterface({
 
 
 stream.on('data', (msg: Message) => {
-    console.log('msg from serv: ', msg);
+    console.log('msg from serv: ', msg.getText());
 });
 
 stream.on('end', () => {
