@@ -7,12 +7,12 @@
 import * as grpc from "@grpc/grpc-js";
 import * as chat_pb from "./chat_pb";
 
-interface IChatService extends grpc.ServiceDefinition<grpc.UntypedServiceImplementation> {
-    send: IChatService_Isend;
+interface ITunnelService extends grpc.ServiceDefinition<grpc.UntypedServiceImplementation> {
+    messageTunnel: ITunnelService_ImessageTunnel;
 }
 
-interface IChatService_Isend extends grpc.MethodDefinition<chat_pb.Message, chat_pb.Message> {
-    path: "/Chat/send";
+interface ITunnelService_ImessageTunnel extends grpc.MethodDefinition<chat_pb.Message, chat_pb.Message> {
+    path: "/Tunnel/messageTunnel";
     requestStream: true;
     responseStream: true;
     requestSerialize: grpc.serialize<chat_pb.Message>;
@@ -21,20 +21,20 @@ interface IChatService_Isend extends grpc.MethodDefinition<chat_pb.Message, chat
     responseDeserialize: grpc.deserialize<chat_pb.Message>;
 }
 
-export const ChatService: IChatService;
+export const TunnelService: ITunnelService;
 
-export interface IChatServer extends grpc.UntypedServiceImplementation {
-    send: grpc.handleBidiStreamingCall<chat_pb.Message, chat_pb.Message>;
+export interface ITunnelServer extends grpc.UntypedServiceImplementation {
+    messageTunnel: grpc.handleBidiStreamingCall<chat_pb.Message, chat_pb.Message>;
 }
 
-export interface IChatClient {
-    send(): grpc.ClientDuplexStream<chat_pb.Message, chat_pb.Message>;
-    send(options: Partial<grpc.CallOptions>): grpc.ClientDuplexStream<chat_pb.Message, chat_pb.Message>;
-    send(metadata: grpc.Metadata, options?: Partial<grpc.CallOptions>): grpc.ClientDuplexStream<chat_pb.Message, chat_pb.Message>;
+export interface ITunnelClient {
+    messageTunnel(): grpc.ClientDuplexStream<chat_pb.Message, chat_pb.Message>;
+    messageTunnel(options: Partial<grpc.CallOptions>): grpc.ClientDuplexStream<chat_pb.Message, chat_pb.Message>;
+    messageTunnel(metadata: grpc.Metadata, options?: Partial<grpc.CallOptions>): grpc.ClientDuplexStream<chat_pb.Message, chat_pb.Message>;
 }
 
-export class ChatClient extends grpc.Client implements IChatClient {
+export class TunnelClient extends grpc.Client implements ITunnelClient {
     constructor(address: string, credentials: grpc.ChannelCredentials, options?: Partial<grpc.ClientOptions>);
-    public send(options?: Partial<grpc.CallOptions>): grpc.ClientDuplexStream<chat_pb.Message, chat_pb.Message>;
-    public send(metadata?: grpc.Metadata, options?: Partial<grpc.CallOptions>): grpc.ClientDuplexStream<chat_pb.Message, chat_pb.Message>;
+    public messageTunnel(options?: Partial<grpc.CallOptions>): grpc.ClientDuplexStream<chat_pb.Message, chat_pb.Message>;
+    public messageTunnel(metadata?: grpc.Metadata, options?: Partial<grpc.CallOptions>): grpc.ClientDuplexStream<chat_pb.Message, chat_pb.Message>;
 }

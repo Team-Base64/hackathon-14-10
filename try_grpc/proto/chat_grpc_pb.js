@@ -16,9 +16,9 @@ function deserialize_Message(buffer_arg) {
 }
 
 
-var ChatService = exports.ChatService = {
-  send: {
-    path: '/Chat/send',
+var TunnelService = exports.TunnelService = {
+  messageTunnel: {
+    path: '/Tunnel/messageTunnel',
     requestStream: true,
     responseStream: true,
     requestType: chat_pb.Message,
@@ -30,4 +30,4 @@ var ChatService = exports.ChatService = {
   },
 };
 
-exports.ChatClient = grpc.makeGenericClientConstructor(ChatService);
+exports.TunnelClient = grpc.makeGenericClientConstructor(TunnelService);

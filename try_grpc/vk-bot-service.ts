@@ -1,12 +1,12 @@
-import {ChatClient} from "./proto/chat_grpc_pb";
+import {TunnelClient} from "./proto/chat_grpc_pb";
 import {credentials} from "@grpc/grpc-js";
 import {Message} from "./proto/chat_pb";
 import * as readline from "readline";
 
 
-const client = new ChatClient('localhost:5000', credentials.createInsecure());
+const client = new TunnelClient('localhost:5000', credentials.createInsecure());
 
-const stream = client.send();
+const stream = client.messageTunnel();
 
 
 const rl = readline.createInterface({

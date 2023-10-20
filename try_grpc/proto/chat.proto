@@ -4,6 +4,6 @@ message Message {
     string text = 1;
 }
 
-service Chat {
-    rpc send(stream Message) returns (stream Message);
+service Tunnel {
+    rpc messageTunnel(stream Message) returns (stream Message);
 }

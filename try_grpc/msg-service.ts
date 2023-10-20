@@ -1,12 +1,12 @@
-import {ChatService, IChatServer} from "./proto/chat_grpc_pb";
+import {TunnelService, ITunnelServer} from "./proto/chat_grpc_pb";
 import {Message} from "./proto/chat_pb";
 import {ServerCredentials, Server, ServerDuplexStream, UntypedHandleCall} from "@grpc/grpc-js";
 import * as readline from "readline";
 
-class ChatServer implements IChatServer {
+class TunnelServer implements ITunnelServer {
     [name: string]: UntypedHandleCall;
 
-    send(call: ServerDuplexStream<Message, Message>): void {
+    messageTunnel(call: ServerDuplexStream<Message, Message>): void {
         call.on('data', (msg) => {
             console.log('server receive: ', msg.getText());
         });
@@ -32,8 +32,8 @@ class ChatServer implements IChatServer {
 }
 
 const server = new Server();
-const impl = new ChatServer();
-server.addService(ChatService, impl);
+const impl = new TunnelServer();
+server.addService(TunnelService, impl);
 
 server.bindAsync('localhost:5000', ServerCredentials.createInsecure(), (error, port) => {
     if (error) {
